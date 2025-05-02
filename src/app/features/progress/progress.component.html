@@ -1,0 +1,89 @@
+@if (selectInsuranceDetailClaimsByUserIdAndUser$ | async; as information) {
+  <div class="container mt-5">
+    <!-- Profile Summary -->
+    <div class="card text-center p-4 mb-4">
+      <h2 class="card-title">Agent Profile</h2>
+      <div card-body>
+        <img
+          width="500"
+          alt="mdo"
+          [src]="information.user!.profileUrl"
+          alt="Agent Avatar"
+          class="mb-3"
+        />
+        <h3>{{ information.user!.name }}</h3>
+        <p><strong>Level:</strong> {{ information.user!.level }}</p>
+        <p><strong>Total XP:</strong> {{ information.user!.xp }} XP</p>
+        <div class="progress">
+          <div
+            role="progressbar"
+            class="progress-bar bg-success"
+            [style.width.%]="information.user?.progress"
+            [attr.aria-valuenow]="information.user?.progress"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- XP History -->
+    <div class="card p-4 mb-4">
+      <h2 class="card-title">XP History & Milestones</h2>
+      <ul class="list-group">
+        @if (information.user!.xpHistory) {
+          @for (
+            milestone of information.user!.xpHistory;
+            track milestone.id;
+            let count = $count
+          ) {
+            @if (count > 0) {
+              <li class="list-group-item">
+                {{ milestone.description }} (+{{ milestone.xp }} XP)
+              </li>
+            } @else {
+              <p>No history yet</p>
+            }
+          }
+        } @else {
+          <p>No history yet</p>
+        }
+      </ul>
+    </div>
+
+    <!-- Claim History -->
+    <div class="card p-4 mb-4">
+      <h2 class="card-title">Claim History</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (claim of information.insuranceClaims; track claim.id) {
+            <tr>
+              <td>{{ claim.title }}</td>
+              <td>{{ claim.amountRequested }}</td>
+              <td>
+                @switch (claim.status) {
+                  @case ("Approved") {
+                    <span class="badge bg-success">Approved</span>
+                  }
+                  @case ("Rejected") {
+                    <span class="badge bg-danger">Denied</span>
+                  }
+                  @default {
+                    <span class="badge bg-secondary">Unknown</span>
+                  }
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}

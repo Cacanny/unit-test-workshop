@@ -1,0 +1,53 @@
+<div class="container">
+  <header
+    class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom"
+  >
+    <div class="col-md-3 mb-2 mb-md-0">
+      <app-menu-logo> </app-menu-logo>
+    </div>
+
+    <app-menu-item-list> </app-menu-item-list>
+
+    <div class="col-md-3 text-end">
+      @let loggedInUser = loggedInUser$ | async;
+      @if (loggedInUser) {
+        <div class="dropdown">
+          <a
+            href="#"
+            class="nav-link dropdown-toggle"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <img
+              [src]="loggedInUser?.avatarUrl"
+              alt="mdo"
+              width="32"
+              height="32"
+              class="rounded-circle"
+            />
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Profile</a></li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <button (click)="logOut()" class="dropdown-item" href="#">
+                Logout
+              </button>
+            </li>
+          </ul>
+        </div>
+      } @else {
+        <a
+          type="button"
+          class="btn btn-outline-primary me-2"
+          routerLink="/login"
+        >
+          Login</a
+        >
+        <a type="button" class="btn btn-primary" routerLink="/register"
+          >Sign-up</a
+        >
+      }
+    </div>
+  </header>
+</div>

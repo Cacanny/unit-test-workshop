@@ -1,0 +1,144 @@
+{
+  "creatures": [
+    {
+      "id": 101,
+      "name": "Flamewing the Dragon",
+      "species": "Dragon",
+      "insurancePolicy": "Fire Damage, Hoard Theft",
+      "claims": [301, 302],
+      "imageUrl": "assets/dragon.png"
+    },
+    {
+      "id": 102,
+      "name": "Sir Clumsy the Unicorn",
+      "species": "Unicorn",
+      "insurancePolicy": "Medical Coverage, Magical Horn Protection",
+      "claims": [303, 307],
+      "imageUrl": "assets/unicorn.png"
+    },
+    {
+      "id": 103,
+      "name": "Marina the Mermaid",
+      "species": "Mermaid",
+      "insurancePolicy": "Lost Treasure Coverage, Oceanic Property Protection",
+      "claims": [304, 306],
+      "imageUrl": "assets/mermaid.png"
+    }
+  ],
+  "insuranceClaims": [
+    {
+      "id": 301,
+      "clientId": 101,
+      "title": "🔥 Dragon's Hoard Fire Disaster",
+      "description": "Accidentally burned down gold stash with fire breath.",
+      "amountRequested": 5000,
+      "status": "Pending",
+      "fraudRisk": "Low",
+      "imageUrl": "assets/dragon.png"
+    },
+    {
+      "id": 302,
+      "clientId": 101,
+      "title": "🦴 Stolen Treasure Hoard",
+      "description": "Treasure hoard stolen by rogue goblins.",
+      "amountRequested": 10000,
+      "status": "Approved",
+      "fraudRisk": "Medium",
+      "imageUrl": "assets/dragon.png"
+    },
+    {
+      "id": 303,
+      "clientId": 102,
+      "title": "🦄 Chipped Magical Horn Accident",
+      "description": "Chipped magical horn while galloping too fast.",
+      "amountRequested": 750,
+      "status": "Denied",
+      "fraudRisk": "High",
+      "imageUrl": "assets/unicorn.png"
+    },
+    {
+      "id": 306,
+      "clientId": 103,
+      "title": "🌊 Mermaid's Coral Castle Storm Damage",
+      "description": "Storm destroyed coral castle, leaving valuable pearls lost at sea.",
+      "amountRequested": 6500,
+      "status": "Pending",
+      "fraudRisk": "Low",
+      "imageUrl": "assets/mermaid.png"
+    },
+    {
+      "id": 307,
+      "clientId": 102,
+      "title": "🦄 Golden Horseshoe Claim",
+      "description": "Claims that an invisible goblin stole his golden horseshoes... but provided no evidence.",
+      "amountRequested": 5000,
+      "status": "Pending",
+      "fraudRisk": "High",
+      "imageUrl": "assets/unicorn.png"
+    }
+  ],
+  "claimsProcessingHistory": [
+    {
+      "claimId": 301,
+      "processedBy": "mage_milo",
+      "decision": "Approved",
+      "notes": "Fire damage covered under policy."
+    },
+    {
+      "claimId": 302,
+      "processedBy": "knight_kevin",
+      "decision": "Approved",
+      "notes": "Client provided evidence of goblin theft."
+    },
+    {
+      "claimId": 303,
+      "processedBy": "mage_milo",
+      "decision": "Denied",
+      "notes": "Horn damage not covered under policy."
+    }
+  ],
+  "fraudDetectionCases": [
+    [
+      {
+        "claimId": 303,
+        "flaggedBySystem": true,
+        "reason": "Similar fraudulent claims detected in history.",
+        "riskScore": 8.5
+      },
+      {
+        "claimId": 307,
+        "flaggedBySystem": false,
+        "reason": " An invisible goblin theft with no supporting evidence raises major red flags",
+        "riskScore": 9.5
+      }
+    ]
+  ],
+  "users": [
+    {
+      "id": 1,
+      "username": "mage_milo",
+      "role": "claimsProcessor",
+      "password": "spellcaster123"
+    },
+    {
+      "id": 2,
+      "username": "knight_kevin",
+      "role": "claimsProcessor",
+      "password": "swordmaster456"
+    },
+    {
+      "id": 3,
+      "username": "admin_alice@insuraquest.com",
+      "name": "Witch Alice",
+      "level": 4,
+      "claimsProcessed": 50,
+      "fraudeCasesSolved": 3,
+      "role": "admin",
+      "avatarUrl": "assets/witch-avatar.png",
+      "profileUrl": "assets/witch.png",
+      "password": "adminpass789",
+      "xp": "500",
+      "levelDescription": "Fraud Specialist (Level 4)"
+    }
+  ]
+}

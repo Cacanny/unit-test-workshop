@@ -1,0 +1,25 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Claim ID</th>
+      <th scope="col">Policy Holder</th>
+      <th scope="col">Description</th>
+      <th scope="col">Status</th>
+      <th scope="col">Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (insurance of insuranceClaims$ | async; track $index) {
+      <tr>
+        <th scope="row">{{ insurance.id }}</th>
+        <td>{{ insurance.policyHolderName }}</td>
+        <td>{{ insurance.description }}</td>
+        <td>{{ insurance.status }}</td>
+        <td>{{ insurance.amountRequested | currency }}</td>
+        <td>
+          <a [routerLink]="['/dashboard/claims', insurance.id]">Details</a>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

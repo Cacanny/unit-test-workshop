@@ -1,0 +1,75 @@
+<!-- <div class="card">
+  <h5 class="card-header">Featured</h5>
+  <div class="card-body">
+    <h5 class="card-title">Special title treatment</h5>
+    <p class="card-text">
+      With supporting text below as a natural lead-in to additional content.
+    </p>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+  </div>
+</div> -->
+
+@let loggedInUser = loggedInUser$ | async;
+
+<div class="p-5 text-center bg-body-tertiary rounded-3">
+  <img
+    [src]="loggedInUser?.profileUrl"
+    width="500"
+    alt="mdo"
+    class="img-thumbnail"
+  />
+
+  <h1 class="text-body-emphasis">Welcome back, {{ loggedInUser?.name }}</h1>
+  <p class="col-lg-8 mx-auto fs-5 text-muted">
+    🔹 Level: {{ loggedInUser?.level }} | Claims Processed:
+    {{ loggedInUser?.claimsProcessed }} | Fraud Cases Solved:
+    {{ loggedInUser?.fraudeCasesSolved }}
+  </p>
+</div>
+
+<div class="container mt-5">
+  <div class="row">
+    <h1>Pending claims</h1>
+
+    @let insuranceClaimsLoadingState = insuranceClaimsLoadingState$ | async;
+
+    @if (insuranceClaimsLoadingState?.isLoading) {
+      <app-spinner></app-spinner>
+    } @else if (insuranceClaimsLoadingState?.hasError) {
+      <div class="alert alert-danger" role="alert">
+        Error loading insurance claims. Please try again later.
+      </div>
+    } @else if (insuranceClaimsLoadingState?.isSuccess) {
+      <div class="card-group">
+        @for (pendingClaim of pendingClaims$ | async; track $index) {
+          <div class="card">
+            <img [src]="pendingClaim.imageUrl" class="card-img-top" alt="..." />
+            <div class="card-body">
+              <h5 class="card-title">{{ pendingClaim.title }}</h5>
+              <div class="card-text">
+                @if (pendingClaim.fraudRisk === "High") {
+                  <span class="badge text-bg-danger">Fraud Risk</span>
+                } @else if (pendingClaim.fraudRisk === "Medium") {
+                  <span class="badge text-bg-warning">Medium Risk</span>
+                } @else if (pendingClaim.fraudRisk === "Low") {
+                  <span class="badge text-bg-success">Low Risk</span>
+                }
+              </div>
+
+              <p class="card-text">
+                {{ pendingClaim.description }}
+              </p>
+            </div>
+            <div class="card-footer">
+              <a
+                [routerLink]="['/dashboard/claims', pendingClaim.id]"
+                class="btn btn-primary"
+                >See Claim
+              </a>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

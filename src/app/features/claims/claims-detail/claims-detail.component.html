@@ -1,0 +1,79 @@
+<a type="button" class="btn btn-secondary" routerLink="/dashboard/claims">
+  Go Back
+</a>
+
+<div class="claims-detail">
+  @if (insuranceClaim$ | async; as insuranceClaim) {
+    <h1>Claims Detail</h1>
+    <div class="claim-info">
+      <p><strong>Title:</strong> {{ insuranceClaim.title }}</p>
+      <p><strong>Claim ID:</strong> {{ insuranceClaim.id }}</p>
+      <p><strong>Status:</strong> {{ insuranceClaim.status }}</p>
+      <p><strong>Description:</strong> {{ insuranceClaim.description }}</p>
+      <p>
+        <strong>Amount:</strong> {{ insuranceClaim.amountRequested | currency }}
+      </p>
+      <p><strong>Risk:</strong> {{ insuranceClaim.fraudRisk }}</p>
+    </div>
+
+    @let loadingStatus = loadingStatus$ | async;
+
+    @if (loadingStatus!.isLoading) {
+      <app-spinner> </app-spinner>
+    } @else if (insuranceClaim.status === "Pending") {
+      <h2>Review</h2>
+
+      <form [formGroup]="formGroup" novalidate>
+        <div class="mb-3">
+          <label for="notice" class="form-label">Notes </label>
+          <textarea
+            class="form-control"
+            id="notice"
+            rows="3"
+            formControlName="notice"
+          ></textarea>
+        </div>
+
+        <button
+          type="button"
+          (click)="approveClaim()"
+          class="btn btn-success me-2"
+        >
+          ✅ Approve
+        </button>
+
+        <button
+          type="button"
+          (click)="rejectClaim()"
+          class="btn btn-danger me-2"
+        >
+          ❌ Reject
+        </button>
+      </form>
+    }
+
+    @if (insuranceClaim.claimProcessingHistory) {
+      @if (insuranceClaim.claimProcessingHistory.length > 0) {
+        <h1>Claims History</h1>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Processed By</th>
+              <th scope="col">Decision</th>
+              <th scope="col">Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of insuranceClaim.claimProcessingHistory; track $index) {
+              <tr>
+                <td>{{ item.processedBy }}</td>
+                <td>{{ item.decision }}</td>
+                <td>{{ item.notes }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    }
+  }
+</div>

@@ -1,0 +1,34 @@
+@let loadingStatus = creaturesLoadingStatus$ | async;
+
+@if (loadingStatus?.isLoading) {
+  <app-spinner></app-spinner>
+} @else if (loadingStatus?.hasError) {
+  <div class="alert alert-danger" role="alert">
+    Error loading creatures. Please try again later.
+  </div>
+} @else if (loadingStatus?.isSuccess) {
+  <div class="alert alert-success" role="alert">
+    Creatures loaded successfully.
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-2 g-4">
+    @for (creature of creatures$ | async; track $index; let count = $count) {
+      <div class="col">
+        <div class="card">
+          <img [src]="creature.imageUrl" class="card-img-top" alt="..." />
+          <div class="card-body">
+            <h5 class="card-title">{{ creature.name }}</h5>
+            <p class="card-text">
+              {{ creature.insurancePolicy }}
+            </p>
+            <a
+              [routerLink]="['/dashboard/creatures', creature.id]"
+              class="btn btn-primary"
+              >Details</a
+            >
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+}

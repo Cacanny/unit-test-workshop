@@ -1,0 +1,96 @@
+<div class="container mt-5">
+  @if (creature$ | async; as creature) {
+    <!-- Creature Details -->
+    <div class="card text-center p-4 mb-4">
+      <h2 class="card-title">Creature Profile: {{ creature.name }}</h2>
+
+      <div card-body>
+        <img
+          width="500"
+          alt="mdo"
+          [src]="creature.imageUrl"
+          alt="Agent Avatar"
+          class="mb-3"
+        />
+        <p><strong>Species:</strong> {{ creature.species }}</p>
+        <p>
+          <strong>Insurance Coverage:</strong> {{ creature.insurancePolicy }}
+        </p>
+        <p>
+          <strong>Fraud Risk Level:</strong>
+          <span appFraudRiskBadge [fraudRisk]="highestRisk"></span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Active Claims -->
+    <div class="card p-4 mb-4">
+      <h2 class="card-title">📜 Active Insurance Claims</h2>
+      <ul class="list-group">
+        @if (activeInsuranceClaims.length === 0) {
+          <li class="list-group-item text-center">
+            <p class="text-muted">No active insurance claims available.</p>
+          </li>
+        }
+
+        @for (claim of activeInsuranceClaims; track claim.id) {
+          <li class="list-group-item">
+            <h5>{{ claim.title }}</h5>
+            <p>{{ claim.description }}</p>
+            <p>
+              <strong>Amount Requested:</strong>
+              {{ claim.amountRequested | currency }}
+            </p>
+            <p>
+              <strong>Status:</strong>
+              <span class="badge bg-warning">{{ claim.status }}</span>
+            </p>
+            <div class="mt-3">
+              <a [routerLink]="['/dashboard/claims', claim.id]">Details</a>
+            </div>
+          </li>
+        }
+      </ul>
+    </div>
+
+    <!-- Claim History -->
+    <div class="card p-4 mb-4">
+      <h2 class="card-title">📜 Claim History</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (claim of historyInsuranceClaims; track claim.id) {
+            <tr>
+              <td>{{ claim.title }}</td>
+              <td>{{ claim.amountRequested | currency }}</td>
+              <td>
+                <span class="badge bg-primary">{{ claim.status }}</span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Fraud Alerts -->
+    <div class="card p-4 mb-4">
+      <h2 class="card-title">⚠️ Fraud Alerts & Investigation History</h2>
+      <ul class="list-group">
+        <!-- @for (fraudCase of creature.fraudHistory; track fraudCase.id) {
+          <li class="list-group-item">
+            <h5>{{ fraudCase.title }}</h5>
+            <p>{{ fraudCase.description }}</p>
+            <p><strong>Risk Score:</strong> {{ fraudCase.risk_score }}</p>
+            <button class="btn btn-warning mt-2">Review Fraud Report</button>
+          </li>
+        } -->
+      </ul>
+    </div>
+  }
+</div>

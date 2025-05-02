@@ -1,0 +1,5 @@
+@if (isLoggedIn$ | async) {
+  <app-admin-dashboard></app-admin-dashboard>
+} @else {
+  <app-public-dashboard></app-public-dashboard>
+}
