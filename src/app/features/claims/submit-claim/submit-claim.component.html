@@ -1,0 +1,107 @@
+@let loadingStatus = loadingStatus$ | async;
+
+@if (loadingStatus!.isSuccess) {
+  <div class="alert alert-success" role="alert">
+    Succesfully submitted a claim
+  </div>
+}
+
+<form [formGroup]="claimForm" (ngSubmit)="onSubmit()" novalidate>
+  <div class="mb-3">
+    <label for="select" class="form-label">Creature</label>
+    <select
+      class="form-select"
+      id="select"
+      aria-label="Default select example"
+      formControlName="creature"
+      [ngClass]="{
+        'is-invalid': creature.invalid && (creature.dirty || creature.touched),
+      }"
+    >
+      @for (item of options; track $index) {
+        <option [value]="item.value">{{ item.key }}</option>
+      }
+    </select>
+
+    @if (creature.invalid && (creature.dirty || creature.touched)) {
+      <div class="invalid-feedback">
+        @if (creature.hasError("required")) {
+          <div>Creature is required.</div>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="mb-3">
+    <label for="exampleFormControlInput1" class="form-label">Title </label>
+    <input
+      type="text"
+      class="form-control"
+      id="exampleFormControlInput1"
+      formControlName="title"
+      [ngClass]="{
+        'is-invalid': title.invalid && (title.dirty || title.touched),
+      }"
+    />
+    @if (title.invalid && (title.dirty || title.touched)) {
+      <div class="invalid-feedback">
+        @if (title.hasError("required")) {
+          <div>Title is required.</div>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="mb-3">
+    <label for="exampleFormControlTextarea1" class="form-label"
+      >Description</label
+    >
+    <textarea
+      class="form-control"
+      id="exampleFormControlTextarea1"
+      rows="3"
+      formControlName="description"
+      [ngClass]="{
+        'is-invalid':
+          description.invalid && (description.dirty || description.touched),
+      }"
+    ></textarea>
+
+    @if (description.invalid && (description.dirty || description.touched)) {
+      <div class="invalid-feedback">
+        @if (description.hasError("required")) {
+          <div>Description is required.</div>
+        }
+        @if (description.hasError("max")) {
+          <div>Max 500 characters.</div>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="mb-3">
+    <label for="exampleFormControlInput1" class="form-label">Amount </label>
+    <input
+      type="number"
+      class="form-control"
+      id="exampleFormControlInput1"
+      formControlName="amount"
+      [ngClass]="{
+        'is-invalid': amount.invalid && (amount.dirty || amount.touched),
+      }"
+    />
+    @if (amount.invalid && (amount.dirty || amount.touched)) {
+      <div class="invalid-feedback">
+        @if (amount.hasError("required")) {
+          <div>Amount is required.</div>
+        }
+      </div>
+    }
+  </div>
+
+  @if (loadingStatus!.isLoading) {
+    <app-spinner></app-spinner>
+  } @else {
+    <button type="submit" class="btn btn-primary mb-3">Submit claim</button>
+  }
+</form>

@@ -8,6 +8,7 @@ import {
   InsuranceClaim,
   User,
 } from '../insura-quest.types';
+import { SubmitClaim } from '../../features/claims/submit-claim/submit-claim.types';
 
 export const InsuraQuestActions = createActionGroup({
   source: 'InsuraQuest',
@@ -54,5 +55,8 @@ export const InsuraQuestActions = createActionGroup({
     'Update Claims History Progress': props<{
       claimsProcessingHistory: ClaimProcessingHistory;
     }>(),
+    'Submit Claim': props<{ claim: SubmitClaim }>(),
+    'Submit Claim Success': props<{ claim: InsuranceClaim }>(),
+    'Submit Claim Failure': emptyProps(),
   },
 });

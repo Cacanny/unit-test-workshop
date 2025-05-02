@@ -63,24 +63,22 @@
           </tr>
         </thead>
         <tbody>
-          @for (claim of information.insuranceClaims; track claim.id) {
-            <tr>
-              <td>{{ claim.title }}</td>
-              <td>{{ claim.amountRequested }}</td>
-              <td>
-                @switch (claim.status) {
-                  @case ("Approved") {
-                    <span class="badge bg-success">Approved</span>
-                  }
-                  @case ("Rejected") {
-                    <span class="badge bg-danger">Denied</span>
-                  }
-                  @default {
-                    <span class="badge bg-secondary">Unknown</span>
-                  }
-                }
-              </td>
-            </tr>
+          @for (
+            claim of information.insuranceClaims;
+            track claim.id;
+            let count = $count
+          ) {
+            @if (count > 0) {
+              <tr>
+                <td>{{ claim.title }}</td>
+                <td>{{ claim.amountRequested | currency }}</td>
+                <td>
+                  <span appStatusBadge [status]="claim.status"></span>
+                </td>
+              </tr>
+            } @else {
+              <p>No history yet</p>
+            }
           }
         </tbody>
       </table>

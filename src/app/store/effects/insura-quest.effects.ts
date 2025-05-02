@@ -191,4 +191,39 @@ export class InsuraQuestEffects {
       ),
     ),
   );
+
+  loadSubmitClaim$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(InsuraQuestActions.submitClaim),
+      concatLatestFrom(({ claim }) => [
+        this.store.select(insuraQuestFeature.selectInsuranceClaims),
+        this.store.select(
+          insuraQuestFeature.selectCreatureById(Number(claim.creature)),
+        ),
+        this.store.select(insuraQuestFeature.selectLoggedInUser),
+      ]),
+      exhaustMap(([{ claim }, insuranceClaims, creature, user]) =>
+        this.insuranceClaimService.submitClaim().pipe(
+          map(() =>
+            InsuraQuestActions.submitClaimSuccess({
+              claim: this.insuranceClaimService.createNewClaim(
+                insuranceClaims,
+                creature!.imageUrl,
+                user!.name,
+                {
+                  clientId: claim.creature,
+                  amount: claim.amount,
+                  description: claim.description,
+                  title: claim.title,
+                },
+              ),
+            }),
+          ),
+          catchError(() =>
+            of(InsuraQuestActions.getClaimsProcessingHistoryFailure()),
+          ),
+        ),
+      ),
+    ),
+  );
 }

@@ -1,9 +1,6 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {
-  InsuranceActionType,
-  InsuranceClaim,
-} from '../../../store/insura-quest.types';
+import { InsuranceClaim } from '../../../store/insura-quest.types';
 import { Store } from '@ngrx/store';
 import { InsuraQuestActions } from '../../../store/actions/insura-quest.actions';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -15,6 +12,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { InsuranceClaimService } from '../../../services/insurance-claim/insurance-claim.service';
 
 @Component({
   selector: 'app-claims-detail',
@@ -25,6 +23,7 @@ export class ClaimsDetailComponent implements OnInit {
   store = inject(Store);
   route = inject(ActivatedRoute);
   destroy$ = inject(DestroyRef);
+  service = inject(InsuranceClaimService);
 
   spinner$ = new BehaviorSubject(false);
 
@@ -60,26 +59,31 @@ export class ClaimsDetailComponent implements OnInit {
     if (this.validateFormvalues()) {
       const formValue = this.getFormValue();
 
-      this.store.dispatch(
-        InsuraQuestActions.alterInsuranceClaim({
-          status: InsuranceActionType.APPROVED,
-          claimId: this.claimId,
-          notice: formValue,
-        }),
-      );
+      this.service.approveClaim(this.claimId, formValue);
     }
   }
 
   rejectClaim(): void {
     if (this.validateFormvalues()) {
       const formValue = this.getFormValue();
-      this.store.dispatch(
-        InsuraQuestActions.alterInsuranceClaim({
-          status: InsuranceActionType.REJECTED,
-          claimId: this.claimId,
-          notice: formValue,
-        }),
-      );
+
+      this.service.rejectClaim(this.claimId, formValue);
+    }
+  }
+
+  resolveFraud(): void {
+    if (this.validateFormvalues()) {
+      const formValue = this.getFormValue();
+
+      this.service.resolveFraud(this.claimId, formValue);
+    }
+  }
+
+  markAsFraud(): void {
+    if (this.validateFormvalues()) {
+      const formValue = this.getFormValue();
+
+      this.service.markAsFraud(this.claimId, formValue);
     }
   }
 

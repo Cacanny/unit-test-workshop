@@ -25,6 +25,7 @@ export interface InsuraQuestState {
   fraudeDetectionCasesLoadingState: LoadingState;
   claimsProcessionHistoryLoadingStatus: LoadingState;
   alterInsuranceClaimStatus: LoadingState;
+  submitClaimStatus: LoadingState;
 }
 
 // Initial state
@@ -42,6 +43,7 @@ const initialState: InsuraQuestState = {
     LoadingStatusType.IDLE,
   ),
   alterInsuranceClaimStatus: createLoadingStatus(LoadingStatusType.IDLE),
+  submitClaimStatus: createLoadingStatus(LoadingStatusType.IDLE),
 };
 
 // Create reducer
@@ -136,7 +138,7 @@ const insuraQuestReducer = createReducer(
       ...state,
       alterInsuranceClaimStatus: createLoadingStatus(LoadingStatusType.SUCCESS),
       insuranceClaims: state.insuranceClaims.map((claim) =>
-        claim.id === claimId ? { ...claim, status } : claim,
+        Number(claim.id) === Number(claimId) ? { ...claim, status } : claim,
       ),
     }),
   ),
@@ -156,7 +158,7 @@ const insuraQuestReducer = createReducer(
       insuranceClaims: state.insuranceClaims.map((claim) => ({
         ...claim,
         claimProcessingHistory: claimsProcessingHistory.filter(
-          (history) => history.claimId === claim.id,
+          (history) => Number(history.claimId) === Number(claim.id),
         ),
       })),
     }),
@@ -166,7 +168,7 @@ const insuraQuestReducer = createReducer(
     (state, { claimsProcessingHistory }) => ({
       ...state,
       insuranceClaims: state.insuranceClaims.map((claim) =>
-        claim.id === claimsProcessingHistory.claimId
+        Number(claim.id) === Number(claimsProcessingHistory.claimId)
           ? {
               ...claim,
               claimProcessingHistory: [
@@ -178,6 +180,23 @@ const insuraQuestReducer = createReducer(
       ),
     }),
   ),
+  on(InsuraQuestActions.submitClaim, (state) => ({
+    ...state,
+    submitClaimStatus: createLoadingStatus(LoadingStatusType.LOADING),
+  })),
+  on(InsuraQuestActions.submitClaimSuccess, (state, { claim }) => ({
+    ...state,
+    submitClaimStatus: createLoadingStatus(LoadingStatusType.SUCCESS),
+    insuranceClaims: [...state.insuranceClaims, claim],
+    creatures: state.creatures.map((creature) =>
+      Number(creature.id) === Number(claim.clientId)
+        ? {
+            ...creature,
+            claims: [...(creature.claims || []), claim.id],
+          }
+        : creature,
+    ),
+  })),
 );
 
 // Create feature
@@ -238,7 +257,7 @@ export const insuraQuestFeature = createFeature({
     const selectInsuranceClaimsByUserId = (id: number) =>
       createSelector(selectInsuranceClaims, (insuranceClaims) =>
         insuranceClaims.filter(
-          (insuranceClaim) => insuranceClaim.clientId === id,
+          (insuranceClaim) => Number(insuranceClaim.clientId) === Number(id),
         ),
       );
 

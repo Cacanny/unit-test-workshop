@@ -28,6 +28,7 @@ export class CreatureComponent implements OnInit {
 
   activeInsuranceClaims!: InsuranceClaim[];
   historyInsuranceClaims!: InsuranceClaim[];
+  fraudInsuranceClaims!: InsuranceClaim[];
 
   ngOnInit() {
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -58,6 +59,8 @@ export class CreatureComponent implements OnInit {
           this.filterActiveInsuranceClaims(insuranceClaims);
         this.historyInsuranceClaims =
           this.filterHistoryInsuranceClaims(insuranceClaims);
+        this.fraudInsuranceClaims =
+          this.filterInsuranceFraudCases(insuranceClaims);
       });
   }
 
@@ -74,6 +77,15 @@ export class CreatureComponent implements OnInit {
   ): InsuranceClaim[] {
     return insuranceClaims.filter(
       (insuranceClaim) => insuranceClaim.status !== InsuranceActionType.PENDING,
+    );
+  }
+
+  filterInsuranceFraudCases(
+    insuranceClaims: InsuranceClaim[],
+  ): InsuranceClaim[] {
+    return insuranceClaims.filter(
+      (insuranceClaim) =>
+        insuranceClaim.status === InsuranceActionType.FLAG_FRAUD,
     );
   }
 

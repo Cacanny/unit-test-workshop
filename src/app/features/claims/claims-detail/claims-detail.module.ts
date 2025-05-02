@@ -3,7 +3,7 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 import { ClaimsDetailComponent } from './claims-detail.component';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SpinnerModule } from '../../../shared/spinner/spinner.module';
+import { SharedModule } from '../../../shared/shared.module';
 
 @NgModule({
   declarations: [ClaimsDetailComponent],
@@ -12,7 +12,7 @@ import { SpinnerModule } from '../../../shared/spinner/spinner.module';
     CurrencyPipe,
     RouterModule,
     ReactiveFormsModule,
-    SpinnerModule,
+    SharedModule,
   ],
   exports: [ClaimsDetailComponent],
 })

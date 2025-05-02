@@ -14,7 +14,9 @@
         <th scope="row">{{ insurance.id }}</th>
         <td>{{ insurance.policyHolderName }}</td>
         <td>{{ insurance.description }}</td>
-        <td>{{ insurance.status }}</td>
+        <td>
+          <span appStatusBadge [status]="insurance.status"></span>
+        </td>
         <td>{{ insurance.amountRequested | currency }}</td>
         <td>
           <a [routerLink]="['/dashboard/claims', insurance.id]">Details</a>
@@ -23,3 +25,5 @@
     }
   </tbody>
 </table>
+
+<a routerLink="/dashboard/claims/submit-claim"> Submit Claim </a>

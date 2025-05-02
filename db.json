@@ -52,7 +52,7 @@
       "title": "🦄 Chipped Magical Horn Accident",
       "description": "Chipped magical horn while galloping too fast.",
       "amountRequested": 750,
-      "status": "Denied",
+      "status": "FlagFraud",
       "fraudRisk": "High",
       "imageUrl": "assets/unicorn.png"
     },
@@ -93,7 +93,7 @@
     {
       "claimId": 303,
       "processedBy": "mage_milo",
-      "decision": "Denied",
+      "decision": "Rejected",
       "notes": "Horn damage not covered under policy."
     }
   ],

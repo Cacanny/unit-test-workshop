@@ -20,8 +20,8 @@ export class ProgressionService {
       Pending: { Low: 0, Medium: 0, High: 0 },
       Approved: { Low: 10, Medium: 20, High: 30 },
       Rejected: { Low: 8, Medium: 18, High: 25 },
-      Flag_fraud: { Low: 0, Medium: 40, High: 40 },
-      Resolve_fraud: { Low: 0, Medium: 50, High: 50 },
+      FlagFraud: { Low: 0, Medium: 40, High: 40 },
+      ResolveFraud: { Low: 0, Medium: 50, High: 50 },
     };
 
     const earnedXP = Number(xpRewards[action][fraudRisk] || 0);
@@ -47,16 +47,16 @@ export class ProgressionService {
     action: InsuranceActionType,
   ): string {
     switch (action) {
-      case 'Pending':
-        return `No XP earned for pending actions.`;
-      case 'Approved':
+      case InsuranceActionType.APPROVED:
         return `✅ You earned ${earnedXP} XP for approving a claim!`;
-      case 'Rejected':
+      case InsuranceActionType.REJECTED:
         return `❌ You earned ${earnedXP} XP for rejecting a claim.`;
-      case 'Flag_fraud':
+      case InsuranceActionType.FLAG_FRAUD:
         return `⚠️ You flagged potential fraud and earned ${earnedXP} XP!`;
-      case 'Resolve_fraud':
+      case InsuranceActionType.RESOLVE_FRAUD:
         return `🏆 Fraud resolved! You earned ${earnedXP} XP for your efforts.`;
+      case InsuranceActionType.PENDING:
+        return `No XP earned for pending actions.`;
       default:
         return `Action not recognized. No XP earned.`;
     }

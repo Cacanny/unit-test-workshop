@@ -60,6 +60,7 @@ export interface Creature {
   imageUrl: string;
   insurancePolicy: string;
   species: string;
+  claims: number[];
 }
 
 export interface InsuranceClaim {
@@ -91,13 +92,13 @@ export enum InsuranceActionType {
   PENDING = 'Pending',
   APPROVED = 'Approved',
   REJECTED = 'Rejected',
-  FLAG_FRAUD = 'Flag_fraud',
-  RESOLVE_FRAUD = 'Resolve_fraud',
+  FLAG_FRAUD = 'FlagFraud',
+  RESOLVE_FRAUD = 'ResolveFraud',
 }
 
 export interface ClaimProcessingHistory {
   claimId: number;
   processedBy: string;
-  decision: string;
+  decision: InsuranceActionType;
   notes: string;
 }
