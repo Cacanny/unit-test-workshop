@@ -7,6 +7,9 @@
   "settings": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "always",
+    },
   },
   "extensions": {
     "recommendations": ["esbenp.prettier-vscode", "dbaeumer.vscode-eslint"],

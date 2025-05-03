@@ -1,10 +1,8 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { insuraQuestFeature } from '../../store/feature/insura-quest.feature';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { InsuraQuestActions } from '../../store/actions/insura-quest.actions';
-import { InsuranceClaimDetail } from './claims-detail.types';
 import { Observable } from 'rxjs';
+import { FacadeService } from '../../store/facade.service';
+import { InsuranceClaimDetail } from './claims-detail.types';
 
 @Component({
   selector: 'app-claims',
@@ -12,29 +10,26 @@ import { Observable } from 'rxjs';
   templateUrl: './claims.component.html',
 })
 export class ClaimsComponent implements OnInit {
-  store = inject(Store);
+  facadeService = inject(FacadeService);
   destroy$ = inject(DestroyRef);
 
-  insuranceClaims$: Observable<InsuranceClaimDetail[]> = this.store.select(
-    insuraQuestFeature.selectInsuranceDetailClaims,
-  );
+  insuranceClaims$: Observable<InsuranceClaimDetail[]> =
+    this.facadeService.insuranceDetailClaims$;
 
   ngOnInit(): void {
-    this.store
-      .select(insuraQuestFeature.selectInsuranceClaimsLoadingState)
+    this.facadeService.insuranceClaimsLoadingState$
       .pipe(takeUntilDestroyed(this.destroy$))
       .subscribe((status) => {
         if (status.isIdle) {
-          this.store.dispatch(InsuraQuestActions.getInsuranceClaims());
+          this.facadeService.getInsuranceClaims();
         }
       });
 
-    this.store
-      .select(insuraQuestFeature.selectCreaturesLoadingState)
+    this.facadeService.creaturesLoadingState$
       .pipe(takeUntilDestroyed(this.destroy$))
       .subscribe((status) => {
         if (status.isIdle) {
-          this.store.dispatch(InsuraQuestActions.getCreatures());
+          this.facadeService.getCreatures();
         }
       });
   }

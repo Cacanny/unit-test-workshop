@@ -1,16 +1,14 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { InsuraQuestActions } from '../store/actions/insura-quest.actions';
-import { insuraQuestFeature } from '../store/feature/insura-quest.feature';
+import { ActivatedRoute, Router } from '@angular/router';
 import { filter } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
+import { FacadeService } from '../store/facade.service';
 
 @Component({
   selector: 'app-login',
@@ -18,9 +16,10 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
 })
 export class LoginComponent implements OnInit {
-  store = inject(Store);
+  facade = inject(FacadeService);
   router = inject(Router);
   destroyRef = inject(DestroyRef);
+  route = inject(ActivatedRoute);
 
   loginForm: FormGroup = new FormGroup(
     {
@@ -39,17 +38,14 @@ export class LoginComponent implements OnInit {
   onSubmit(): void {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
-      this.store.dispatch(
-        InsuraQuestActions.login({ username: email, password: password }),
-      );
+      this.facade.login(email, password);
     } else {
       console.log('Form is invalid');
     }
   }
 
   ngOnInit(): void {
-    this.store
-      .select(insuraQuestFeature.selectIsLoggedIn)
+    this.facade.isLoggedIn$
       .pipe(
         filter((isLoggedIn) => isLoggedIn === true),
         takeUntilDestroyed(this.destroyRef),
@@ -57,8 +53,7 @@ export class LoginComponent implements OnInit {
       .subscribe(() => {
         let url = 'dashboard/home';
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const returnUrl = urlParams.get('returnUrl');
+        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
 
         if (returnUrl) {
           url = returnUrl;

@@ -1,8 +1,6 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { insuraQuestFeature } from '../../../store/feature/insura-quest.feature';
-import { InsuraQuestActions } from '../../../store/actions/insura-quest.actions';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FacadeService } from '../../../store/facade.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -10,22 +8,15 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './admin-dashboard.component.html',
 })
 export class AdminDashboardComponent implements OnInit {
-  store = inject(Store);
+  facade = inject(FacadeService);
   destroy$ = inject(DestroyRef);
 
-  loggedInUser$ = this.store.select(insuraQuestFeature.selectLoggedInUser);
-
-  pendingClaims$ = this.store.select(insuraQuestFeature.selectPendingClaims);
-  insuranceClaimsLoadingState$ = this.store.select(
-    insuraQuestFeature.selectInsuranceClaimsLoadingState,
-  );
-
-  fraudDetectionCases$ = this.store.select(
-    insuraQuestFeature.selectFraudeDetectionCases,
-  );
-  fraudDetectionCasesLoadingState$ = this.store.select(
-    insuraQuestFeature.selectFraudeDetectionCasesLoadingState,
-  );
+  loggedInUser$ = this.facade.loggedInUser$;
+  pendingClaims$ = this.facade.pendingClaims$;
+  insuranceClaimsLoadingState$ = this.facade.insuranceClaimsLoadingState$;
+  fraudDetectionCases$ = this.facade.fraudeDetectionCases$;
+  fraudDetectionCasesLoadingState$ =
+    this.facade.fraudDetectionCasesLoadingState$;
 
   ngOnInit() {
     this.initializeInsuranceClaimsLoading();
@@ -33,23 +24,21 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   initializeInsuranceClaimsLoading(): void {
-    this.store
-      .select(insuraQuestFeature.selectInsuranceClaimsLoadingState)
+    this.insuranceClaimsLoadingState$
       .pipe(takeUntilDestroyed(this.destroy$))
       .subscribe((status) => {
         if (status.isIdle) {
-          this.store.dispatch(InsuraQuestActions.getInsuranceClaims());
+          this.facade.getInsuranceClaims();
         }
       });
   }
 
   initializeFraudDetectionCasesLoading(): void {
-    this.store
-      .select(insuraQuestFeature.selectFraudeDetectionCasesLoadingState)
+    this.fraudDetectionCasesLoadingState$
       .pipe(takeUntilDestroyed(this.destroy$))
       .subscribe((status) => {
         if (status.isIdle) {
-          this.store.dispatch(InsuraQuestActions.getFraudDetectionCases());
+          this.facade.getFraudDetectionCases();
         }
       });
   }

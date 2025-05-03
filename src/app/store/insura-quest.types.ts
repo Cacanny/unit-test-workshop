@@ -29,7 +29,7 @@ export const createLoadingStatus = (status: LoadingStatusType) => {
 };
 
 export interface User {
-  id: string;
+  id: number;
   name: string;
   username: string;
   password: string;
@@ -53,10 +53,8 @@ export interface XpHistoryMilestone {
 }
 
 export interface Creature {
-  id: string;
+  id: number;
   name: string;
-  type: string;
-  description: string;
   imageUrl: string;
   insurancePolicy: string;
   species: string;

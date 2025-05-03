@@ -1,16 +1,14 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { insuraQuestFeature } from '../../../store/feature/insura-quest.feature';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
+import { FacadeService } from '../../../store/facade.service';
 import {
   Creature,
   FraudRisk,
   InsuranceActionType,
   InsuranceClaim,
 } from '../../../store/insura-quest.types';
-import { Observable } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { InsuraQuestActions } from '../../../store/actions/insura-quest.actions';
 
 @Component({
   selector: 'app-creature',
@@ -18,7 +16,7 @@ import { InsuraQuestActions } from '../../../store/actions/insura-quest.actions'
   templateUrl: './creature.component.html',
 })
 export class CreatureComponent implements OnInit {
-  store = inject(Store);
+  facade = inject(FacadeService);
   route = inject(ActivatedRoute);
   destroy$ = inject(DestroyRef);
 
@@ -33,16 +31,15 @@ export class CreatureComponent implements OnInit {
   ngOnInit() {
     const idParam = this.route.snapshot.paramMap.get('id');
 
-    this.creature$ = this.store.select(
-      insuraQuestFeature.selectCreatureById(Number(idParam)),
+    this.creature$ = this.facade.creatureById$(
+      Number(idParam),
     ) as Observable<Creature>;
 
-    this.store
-      .select(insuraQuestFeature.selectInsuranceClaimsLoadingState)
+    this.facade.insuranceClaimsLoadingState$
       .pipe(takeUntilDestroyed(this.destroy$))
       .subscribe((status) => {
         if (status.isIdle) {
-          this.store.dispatch(InsuraQuestActions.getInsuranceClaims());
+          this.facade.getInsuranceClaims();
         }
       });
 
@@ -50,8 +47,8 @@ export class CreatureComponent implements OnInit {
   }
 
   filterInsuranceClaims(id: number) {
-    this.store
-      .select(insuraQuestFeature.selectInsuranceClaimsByUserId(Number(id)))
+    this.facade
+      .insuranceClaimsByUserId$(id)
       .pipe(takeUntilDestroyed(this.destroy$))
       .subscribe((insuranceClaims) => {
         this.determineHighestFraudRisk(insuranceClaims);

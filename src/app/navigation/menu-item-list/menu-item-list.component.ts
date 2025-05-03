@@ -1,8 +1,7 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { MenuItem } from './menu-item/menu-item.types';
-import { Store } from '@ngrx/store';
-import { insuraQuestFeature } from '../../store/feature/insura-quest.feature';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FacadeService } from '../../store/facade.service';
+import { MenuItem } from './menu-item/menu-item.types';
 
 @Component({
   selector: 'app-menu-item-list',
@@ -11,7 +10,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class MenuItemListComponent implements OnInit {
   destroyRef = inject(DestroyRef);
-  store = inject(Store);
+  facade = inject(FacadeService);
 
   menuItems: MenuItem[] = [
     { label: 'Home', route: '/dashboard/home' },
@@ -30,8 +29,7 @@ export class MenuItemListComponent implements OnInit {
   ];
 
   ngOnInit() {
-    this.store
-      .select(insuraQuestFeature.selectLoggedInUserRole)
+    this.facade.loggedInUserRole$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((role) => {
         this.menuItems = [

@@ -1,8 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { insuraQuestFeature } from '../../store/feature/insura-quest.feature';
 import { Observable } from 'rxjs';
+import { FacadeService } from '../../store/facade.service';
 import { Creature, LoadingState } from '../../store/insura-quest.types';
-import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-creature-list',
@@ -10,13 +9,10 @@ import { Store } from '@ngrx/store';
   templateUrl: './creature-list.component.html',
 })
 export class CreatureListComponent {
-  store = inject(Store);
+  facade = inject(FacadeService);
 
-  creaturesLoadingStatus$: Observable<LoadingState> = this.store.select(
-    insuraQuestFeature.selectCreaturesLoadingState,
-  );
+  creaturesLoadingStatus$: Observable<LoadingState> =
+    this.facade.creaturesLoadingState$;
 
-  creatures$: Observable<Creature[]> = this.store.select(
-    insuraQuestFeature.selectCreatures,
-  );
+  creatures$: Observable<Creature[]> = this.facade.creatures$;
 }

@@ -1,28 +1,29 @@
 import { inject, Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { delay, Observable, of } from 'rxjs';
+import { FacadeService } from '../../store/facade.service';
 import {
   ClaimProcessingHistory,
   FraudRisk,
   InsuranceActionType,
   InsuranceClaim,
 } from '../../store/insura-quest.types';
-import { InsuraQuestActions } from '../../store/actions/insura-quest.actions';
 
 @Injectable({
   providedIn: 'root',
 })
 export class InsuranceClaimService {
-  store = inject(Store);
+  facade = inject(FacadeService);
+
+  delayInMs = 2000;
 
   //  simulate an API call with delay
   alterClaimStatus(): Observable<boolean> {
-    return of(true).pipe(delay(1000));
+    return of(true).pipe(delay(this.delayInMs));
   }
 
   // simulate an API call with delay
   submitClaim(): Observable<boolean> {
-    return of(true).pipe(delay(2000));
+    return of(true).pipe(delay(this.delayInMs));
   }
 
   alterInsuranceClaim(
@@ -30,13 +31,7 @@ export class InsuranceClaimService {
     claimId: number,
     notice: string,
   ) {
-    this.store.dispatch(
-      InsuraQuestActions.alterInsuranceClaim({
-        status,
-        claimId,
-        notice,
-      }),
-    );
+    this.facade.alterInsuranceClaim(status, claimId, notice);
   }
 
   createNewClaim(
@@ -80,19 +75,6 @@ export class InsuranceClaimService {
     };
   }
 
-  createSubmitNewClaimProcessingHistory(
-    claimId: number,
-    clientId: number,
-    processedBy: string,
-  ): ClaimProcessingHistory {
-    return {
-      claimId,
-      decision: InsuranceActionType.PENDING,
-      notes: `Initial creation of submit for clientId: ${clientId} `,
-      processedBy,
-    };
-  }
-
   approveClaim(claimId: number, notice: string) {
     this.alterInsuranceClaim(InsuranceActionType.APPROVED, claimId, notice);
   }
@@ -111,5 +93,18 @@ export class InsuranceClaimService {
       claimId,
       notice,
     );
+  }
+
+  private createSubmitNewClaimProcessingHistory(
+    claimId: number,
+    clientId: number,
+    processedBy: string,
+  ): ClaimProcessingHistory {
+    return {
+      claimId,
+      decision: InsuranceActionType.PENDING,
+      notes: `Initial creation of submit for clientId: ${clientId}`,
+      processedBy,
+    };
   }
 }

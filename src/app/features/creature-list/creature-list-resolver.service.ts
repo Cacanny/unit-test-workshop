@@ -1,22 +1,20 @@
 import { inject, Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
 import { map, Observable, take, tap } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { insuraQuestFeature } from '../../store/feature/insura-quest.feature';
-import { InsuraQuestActions } from '../../store/actions/insura-quest.actions';
+import { FacadeService } from '../../store/facade.service';
 import { Creature } from '../../store/insura-quest.types';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CreatureListResolverService implements Resolve<Creature[]> {
-  store = inject(Store);
+  facade = inject(FacadeService);
 
   resolve(): Observable<Creature[]> {
-    return this.store.select(insuraQuestFeature.selectCreatures).pipe(
+    return this.facade.creatures$.pipe(
       tap((creatures) => {
         if (creatures.length === 0) {
-          this.store.dispatch(InsuraQuestActions.getCreatures());
+          this.facade.getCreatures();
         }
       }),
       map((creatures) => creatures),

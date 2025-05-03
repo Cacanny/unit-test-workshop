@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { insuraQuestFeature } from '../../store/feature/insura-quest.feature';
+import { FacadeService } from '../../store/facade.service';
 
 @Component({
   selector: 'app-progress',
@@ -8,9 +7,8 @@ import { insuraQuestFeature } from '../../store/feature/insura-quest.feature';
   templateUrl: './progress.component.html',
 })
 export class ProgressComponent {
-  store = inject(Store);
+  facade = inject(FacadeService);
 
-  selectInsuranceDetailClaimsByUserIdAndUser$ = this.store.select(
-    insuraQuestFeature.selectInsuranceDetailClaimsByUserIdAndUser,
-  );
+  selectInsuranceDetailClaimsByUserIdAndUser$ =
+    this.facade.insuranceDetailClaimsByUserIdAndUser$;
 }

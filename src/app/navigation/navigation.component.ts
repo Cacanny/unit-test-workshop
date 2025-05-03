@@ -1,8 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { insuraQuestFeature } from '../store/feature/insura-quest.feature';
-import { InsuraQuestActions } from '../store/actions/insura-quest.actions';
 import { Router } from '@angular/router';
+import { FacadeService } from '../store/facade.service';
 
 @Component({
   selector: 'app-navigation',
@@ -10,13 +8,13 @@ import { Router } from '@angular/router';
   templateUrl: './navigation.component.html',
 })
 export class NavigationComponent {
-  store = inject(Store);
+  facade = inject(FacadeService);
   router = inject(Router);
 
-  loggedInUser$ = this.store.select(insuraQuestFeature.selectLoggedInUser);
+  loggedInUser$ = this.facade.loggedInUser$;
 
   logOut(): void {
-    this.store.dispatch(InsuraQuestActions.logOut());
+    this.facade.logOut();
     this.router.navigate(['/logout']);
   }
 }

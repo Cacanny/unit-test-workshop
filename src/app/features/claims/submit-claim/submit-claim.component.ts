@@ -1,10 +1,8 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { insuraQuestFeature } from '../../../store/feature/insura-quest.feature';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FacadeService } from '../../../store/facade.service';
 import { Creature } from '../../../store/insura-quest.types';
-import { InsuraQuestActions } from '../../../store/actions/insura-quest.actions';
 
 @Component({
   selector: 'app-submit-claim',
@@ -12,7 +10,7 @@ import { InsuraQuestActions } from '../../../store/actions/insura-quest.actions'
   templateUrl: './submit-claim.component.html',
 })
 export class SubmitClaimComponent implements OnInit {
-  store = inject(Store);
+  facadeService = inject(FacadeService);
   destroy$ = inject(DestroyRef);
 
   claimForm: FormGroup = new FormGroup(
@@ -28,22 +26,18 @@ export class SubmitClaimComponent implements OnInit {
     { updateOn: 'blur' },
   );
 
-  options: { key: string; value: string }[] = [];
+  options: { key: string; value: number }[] = [];
 
-  loadingStatus$ = this.store.select(
-    insuraQuestFeature.selectSubmitClaimStatus,
-  );
+  loadingStatus$ = this.facadeService.submitClaimStatus$;
 
   ngOnInit(): void {
-    this.store
-      .select(insuraQuestFeature.selectCreatures)
+    this.facadeService.creatures$
       .pipe(takeUntilDestroyed(this.destroy$))
       .subscribe((creatures) => {
         this.options = this.createOptionList(creatures);
       });
 
-    this.store
-      .select(insuraQuestFeature.selectSubmitClaimStatus)
+    this.loadingStatus$
       .pipe(takeUntilDestroyed(this.destroy$))
       .subscribe((status) => {
         if (status.isSuccess) {
@@ -54,15 +48,13 @@ export class SubmitClaimComponent implements OnInit {
 
   onSubmit(): void {
     if (this.claimForm.valid) {
-      this.store.dispatch(
-        InsuraQuestActions.submitClaim({ claim: this.claimForm.value }),
-      );
+      this.facadeService.submitClaim(this.claimForm.value);
     } else {
       console.log('Form is invalid');
     }
   }
 
-  createOptionList(creatures: Creature[]): { key: string; value: string }[] {
+  createOptionList(creatures: Creature[]): { key: string; value: number }[] {
     return creatures.map((creature) => ({
       key: creature.name,
       value: creature.id,

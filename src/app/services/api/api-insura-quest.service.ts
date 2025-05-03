@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { urlBase } from './api-insura-quest.types';
 import { catchError, map, Observable, of } from 'rxjs';
 import {
   ClaimProcessingHistory,
@@ -9,6 +8,7 @@ import {
   InsuranceClaim,
   User,
 } from '../../store/insura-quest.types';
+import { urlBase } from './api-insura-quest.types';
 
 @Injectable({
   providedIn: 'root',
@@ -63,7 +63,7 @@ export class InsuraQuestService {
 
   getInsuranceClaim(id: string): Observable<InsuranceClaim | null> {
     return this.httpClient
-      .get<InsuranceClaim>(`${this.urls.insuranceClaims}${id}`)
+      .get<InsuranceClaim>(`${this.urls.insuranceClaims}/${id}`)
       .pipe(
         map((response) => response),
         catchError((error) => {

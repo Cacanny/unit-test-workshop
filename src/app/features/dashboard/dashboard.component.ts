@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { insuraQuestFeature } from '../../store/feature/insura-quest.feature';
+import { FacadeService } from '../../store/facade.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,7 +7,7 @@ import { insuraQuestFeature } from '../../store/feature/insura-quest.feature';
   templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent {
-  store = inject(Store);
+  facade = inject(FacadeService);
 
-  isLoggedIn$ = this.store.select(insuraQuestFeature.selectIsLoggedIn);
+  isLoggedIn$ = this.facade.isLoggedIn$;
 }

@@ -73,7 +73,7 @@
                 <td>{{ claim.title }}</td>
                 <td>{{ claim.amountRequested | currency }}</td>
                 <td>
-                  <span class="badge bg-primary">{{ claim.status }}</span>
+                  <span appStatusBadge [status]="claim.status"></span>
                 </td>
               </tr>
             }
