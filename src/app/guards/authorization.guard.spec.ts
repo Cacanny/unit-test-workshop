@@ -5,6 +5,7 @@ import { cold } from 'jasmine-marbles';
 import { BehaviorSubject } from 'rxjs';
 import { FacadeService } from '../store/facade.service';
 import { AuthorizationGuard } from './authorization.guard';
+import { UrlService } from './url.service';
 
 class MockFacadeService {
   isLoggedIn$ = new BehaviorSubject<boolean>(false);
@@ -30,6 +31,12 @@ describe('AuthorizationGuard', () => {
         {
           provide: Router,
           useValue: router,
+        },
+        {
+          provide: UrlService,
+          useValue: {
+            getPathName: jasmine.createSpy().and.returnValue('/mock-path'),
+          },
         },
       ],
     }).compileComponents();
@@ -59,7 +66,7 @@ describe('AuthorizationGuard', () => {
 
       expect(result).toBeObservable(expectedResult);
       expect(router.navigate).toHaveBeenCalledWith(['/login'], {
-        queryParams: { returnUrl: '/context.html' },
+        queryParams: { returnUrl: '/mock-path' },
       });
     });
   });

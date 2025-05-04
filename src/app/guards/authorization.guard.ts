@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { map, Observable } from 'rxjs';
 import { FacadeService } from '../store/facade.service';
+import { UrlService } from './url.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +10,7 @@ import { FacadeService } from '../store/facade.service';
 export class AuthorizationGuard implements CanActivate {
   router = inject(Router);
   facade = inject(FacadeService);
+  urlService = inject(UrlService);
 
   canActivate(): boolean | Observable<boolean> | Promise<boolean> {
     return this.facade.isLoggedIn$.pipe(
@@ -17,7 +19,7 @@ export class AuthorizationGuard implements CanActivate {
           return true;
         }
 
-        const returnUrl = window.location.pathname;
+        const returnUrl = this.urlService.getPathName();
 
         this.router.navigate(['/login'], { queryParams: { returnUrl } });
         return false;

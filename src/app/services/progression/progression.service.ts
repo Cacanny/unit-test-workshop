@@ -16,7 +16,7 @@ export class ProgressionService {
     progressionState: ProgressionState | null;
     generatedString: string;
   } {
-    const xpRewards: Record<InsuranceActionType, Record<string, number>> = {
+    const xpRewards: Record<InsuranceActionType, Record<FraudRisk, number>> = {
       Pending: { Low: 0, Medium: 0, High: 0 },
       Approved: { Low: 10, Medium: 20, High: 30 },
       Rejected: { Low: 8, Medium: 18, High: 25 },

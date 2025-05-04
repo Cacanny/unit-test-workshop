@@ -50,10 +50,6 @@ describe('NavigationComponent', () => {
     router = TestBed.inject<MockRouter>(Router as any);
   }));
 
-  it('should behave...', () => {
-    expect(component).toBeTruthy();
-  });
-
   describe('#logOut', () => {
     it('when clicking on the logout button', () => {
       component.logOut();

@@ -1,4 +1,5 @@
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
+import { InsuranceClaimDetail } from '../../features/claims/claims-detail.types';
 import { InsuraQuestActions } from '../actions/insura-quest.actions';
 import {
   createLoadingStatus,
@@ -10,12 +11,10 @@ import {
   LoadingStatusType,
   User,
 } from '../insura-quest.types';
-import { InsuranceClaimDetail } from '../../features/claims/claims-detail.types';
 
 // Define the interface for InsuraQuest
 export interface InsuraQuestState {
   isLoggedIn: boolean;
-  policies: string[];
   loggedInUser: User | null;
   creatures: Creature[];
   creaturesLoadingState: LoadingState;
@@ -31,7 +30,6 @@ export interface InsuraQuestState {
 // Initial state
 const initialState: InsuraQuestState = {
   isLoggedIn: false,
-  policies: [],
   loggedInUser: null,
   creatures: [],
   creaturesLoadingState: createLoadingStatus(LoadingStatusType.IDLE),
@@ -49,11 +47,6 @@ const initialState: InsuraQuestState = {
 // Create reducer
 const insuraQuestReducer = createReducer(
   initialState,
-  on(InsuraQuestActions.load, (state, { id }) => ({ ...state, id })),
-  on(InsuraQuestActions.update, (state, { insuraQuest }) => ({
-    ...state,
-    ...insuraQuest,
-  })),
   on(InsuraQuestActions.clear, () => initialState),
   on(InsuraQuestActions.loginSuccess, (state, { user }) => ({
     ...state,
@@ -103,7 +96,9 @@ const insuraQuestReducer = createReducer(
   })),
   on(InsuraQuestActions.getFraudDetectionCases, (state) => ({
     ...state,
-    insuranceClaimsLoadingState: createLoadingStatus(LoadingStatusType.LOADING),
+    fraudeDetectionCasesLoadingState: createLoadingStatus(
+      LoadingStatusType.LOADING,
+    ),
   })),
   on(
     InsuraQuestActions.getFraudDetectionCasesSuccess,
@@ -223,7 +218,9 @@ export const insuraQuestFeature = createFeature({
       createSelector(
         selectInsuranceClaims,
         (insuranceClaims) =>
-          insuranceClaims.find((claim) => +claim.id === claimId) || null,
+          insuranceClaims.find(
+            (claim) => Number(claim.id) === Number(claimId),
+          ) || null,
       );
     const selectInsuranceDetailClaims = createSelector(
       selectInsuranceClaims,

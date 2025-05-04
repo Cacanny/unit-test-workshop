@@ -1,5 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { InsuraQuestState } from '../feature/insura-quest.feature';
+import { SubmitClaim } from '../../features/claims/submit-claim/submit-claim.types';
 import {
   ClaimProcessingHistory,
   Creature,
@@ -8,13 +8,10 @@ import {
   InsuranceClaim,
   User,
 } from '../insura-quest.types';
-import { SubmitClaim } from '../../features/claims/submit-claim/submit-claim.types';
 
 export const InsuraQuestActions = createActionGroup({
   source: 'InsuraQuest',
   events: {
-    Load: props<{ id: string }>(),
-    Update: props<{ insuraQuest: InsuraQuestState }>(),
     Clear: emptyProps(),
     Login: props<{ username: string; password: string }>(),
     'Log Out': emptyProps(),

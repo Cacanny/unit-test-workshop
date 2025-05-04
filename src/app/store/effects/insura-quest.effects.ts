@@ -1,14 +1,14 @@
 import { inject, Injectable } from '@angular/core';
-import { Actions, ofType, createEffect } from '@ngrx/effects';
-import { catchError, exhaustMap, map } from 'rxjs/operators';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { concatLatestFrom } from '@ngrx/operators';
+import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
-import { InsuraQuestActions } from '../actions/insura-quest.actions';
+import { catchError, exhaustMap, map } from 'rxjs/operators';
 import { InsuraQuestService } from '../../services/api/api-insura-quest.service';
 import { InsuranceClaimService } from '../../services/insurance-claim/insurance-claim.service';
-import { insuraQuestFeature } from '../feature/insura-quest.feature';
-import { Store } from '@ngrx/store';
-import { concatLatestFrom } from '@ngrx/operators';
 import { ProgressionService } from '../../services/progression/progression.service';
+import { InsuraQuestActions } from '../actions/insura-quest.actions';
+import { insuraQuestFeature } from '../feature/insura-quest.feature';
 import { InsuranceActionType, User } from '../insura-quest.types';
 
 @Injectable()
@@ -219,9 +219,7 @@ export class InsuraQuestEffects {
               ),
             }),
           ),
-          catchError(() =>
-            of(InsuraQuestActions.getClaimsProcessingHistoryFailure()),
-          ),
+          catchError(() => of(InsuraQuestActions.submitClaimFailure())),
         ),
       ),
     ),
